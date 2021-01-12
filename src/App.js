@@ -7,7 +7,7 @@ import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 
-import { auth } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 class App extends React.Component {
 
@@ -22,11 +22,26 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
+    // onAuthStateChanged: event listener for user sign-in and sign-out
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);      // Get reference of logged-in user from database
+
+        // onSnapshot: event listener for any changes to the user entry in db
+        userRef.onSnapshot(snapshot => {
+          this.setState({
+            currentUser: {
+              id: snapshot.id,      // ID of the document
+              ...snapshot.data()    // The data stored in the document
+            }
+          });
+        });
+      }
+
+      // When user logs out set state to null (returned in userAuth)
       this.setState({
-        currentUser: user
-      })
-      console.log(user);
+        currentUser: userAuth
+      });
     });
   }
 
