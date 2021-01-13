@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from "react-router-dom";
-import './App.css';
+import { connect } from "react-redux";
 
 import Header from "./components/header/header.component";
 import HomePage from "./pages/homepage/homepage.component";
@@ -8,20 +8,17 @@ import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import { setCurrentUser } from "./redux/user/user.actions";
+
+import './App.css';
 
 class App extends React.Component {
-
-  constructor() {
-    super();
-
-    this.state = {
-      currentUser: null
-    }
-  }
 
   unsubscribeFromAuth = null;
 
   componentDidMount() {
+    const { setCurrentUser } = this.props;
+
     // onAuthStateChanged: event listener for user sign-in and sign-out
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
@@ -29,7 +26,7 @@ class App extends React.Component {
 
         // onSnapshot: event listener for any changes to the user entry in db
         userRef.onSnapshot(snapshot => {
-          this.setState({
+          setCurrentUser({
             currentUser: {
               id: snapshot.id,      // ID of the document
               ...snapshot.data()    // The data stored in the document
@@ -39,9 +36,7 @@ class App extends React.Component {
       }
 
       // When user logs out set state to null (returned in userAuth)
-      this.setState({
-        currentUser: userAuth
-      });
+      setCurrentUser(userAuth);
     });
   }
 
@@ -52,7 +47,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/shop" component={ShopPage} />
@@ -64,4 +59,13 @@ class App extends React.Component {
   }
 }
 
-export default App;
+// Dispatch the state to be set to Redux store which propogates it to all components that use it
+const mapDispatchToProps = (dispatch) => {
+  return ({
+    setCurrentUser: (user) => {        // setCurrentUser is the prop that gets returned
+      dispatch(setCurrentUser(user));   // dispatch method notifies all reducers about the change in state
+    }
+  });
+}
+
+export default connect(null, mapDispatchToProps)(App);
