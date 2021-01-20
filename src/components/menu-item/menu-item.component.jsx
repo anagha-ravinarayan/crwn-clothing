@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom"; // Needed if navigation is required from this component to another
 
 import "./menu-item.styles.scss";
 
