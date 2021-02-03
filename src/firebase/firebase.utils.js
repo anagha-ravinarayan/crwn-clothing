@@ -66,5 +66,26 @@ export const addCollectionAndDocuments = async (collectionKey, documentsToAdd) =
     return await batch.commit();            // Executes the batch request
 }
 
+// Converts the collection snaphot array to object
+export const convertCollectionSnapshotToMap = (collection) => {
+    const transformedCollection = collection.docs.map(doc => {
+        const id = doc.id;
+        const { title, items } = doc.data();
+
+        return {
+            id,
+            title,
+            routeName: encodeURI(title.toLowerCase()),
+            items
+        }
+    });
+
+    // COnvert Collections array to object
+    return transformedCollection.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection;
+        return accumulator;
+    }, {});
+}
+
 //--- Default Export Firebase
 export default firebase;
