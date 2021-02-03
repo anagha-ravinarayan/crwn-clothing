@@ -54,8 +54,6 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 //--- Export hook to create shop data collection and its entries in DB 
 export const addCollectionAndDocuments = async (collectionKey, documentsToAdd) => {
     const collectionRef = firestore.collection(collectionKey);  // Create collection reference
-    console.log("CollectionRef", collectionRef);
-
     const batch = firestore.batch();    // Create a batch request to handle failure; since only one doc can be "set" at a time
 
     documentsToAdd.forEach(doc => {
