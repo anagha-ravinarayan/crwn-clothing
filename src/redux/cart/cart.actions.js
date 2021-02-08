@@ -1,4 +1,4 @@
-import { CartActionTypes } from "./cart.types";
+import CartActionTypes from "./cart.types";
 
 export const toggleCartHidden = () => {
     return ({
@@ -24,5 +24,23 @@ export const clearItemFromCart = (item) => {
     return ({
         type: CartActionTypes.CLEAR_ITEM_FROM_CART,
         payload: item
+    });
+}
+
+export const clearCartStart = () => {
+    return ({
+        type: CartActionTypes.CLEAR_CART_START
+    });
+}
+
+export const clearCartSuccess = () => {
+    return ({
+        type: CartActionTypes.CLEAR_CART_SUCCESS
+    });
+}
+
+export const clearCartFailure = () => {
+    return ({
+        type: CartActionTypes.CLEAR_CART_FAILURE
     });
 }

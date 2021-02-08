@@ -19,9 +19,9 @@ export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
 //--- Export Google Sign-in auth service provider
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
 //--- Export hook to create user entry in DB when signed in for the first time
 export const createUserProfileDocument = async (userAuth, additionalData) => {
@@ -84,6 +84,17 @@ export const convertCollectionSnapshotToMap = (collection) => {
         return accumulator;
     }, {});
 }
+
+// Mimick the onAuthStateChanged functionality: get current user and immediately unsubscribe after getting the user 
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribeFromAuth = auth.onAuthStateChanged(userAuth => {
+            unsubscribeFromAuth();
+            resolve(userAuth);
+        }, reject);
+    });
+}
+
 
 //--- Default Export Firebase
 export default firebase;

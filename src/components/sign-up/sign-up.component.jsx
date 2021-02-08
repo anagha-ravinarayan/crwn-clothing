@@ -1,9 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-import { auth, createUserProfileDocument, signInWithGoogle as signUpWithGoogle } from "../../firebase/firebase.utils";
+import { googleSignUpStart, emailSignUpStart } from "../../redux/user/user.actions";
 
 import { SignUpContainer, Title, Buttons } from "./sign-up.styles";
 
@@ -24,35 +25,24 @@ class SignUp extends React.Component {
         const { value, name } = event.target;
         this.setState({
             [name]: value
-        })
+        });
     }
 
     handleSubmit = async (event) => {
         event.preventDefault();
         const { displayName, email, password, confirmPassword } = this.state;
+        const { signUpWithEmail } = this.props;
 
         if (password !== confirmPassword) {
             alert("Passwords don't match");
             return;
         }
 
-        try {
-            const { user: userAuth } = await auth.createUserWithEmailAndPassword(email, password);
-            const userRef = await createUserProfileDocument(userAuth, { displayName }); // Create reference of signed-up user to database
-            if (userRef) {
-                this.setState({
-                    displayName: '',
-                    email: '',
-                    password: '',
-                    confirmPassword: ''
-                });
-            }
-        } catch (error) {
-            console.log("User could not be created", error);
-        }
+        signUpWithEmail(displayName, email, password);
     }
 
     render() {
+        const { signUpWithGoogle } = this.props;
         return (
             <SignUpContainer>
                 <Title>I do not have an account</Title>
@@ -98,8 +88,19 @@ class SignUp extends React.Component {
                     </Buttons>
                 </form>
             </SignUpContainer>
-        )
+        );
     }
 }
 
-export default SignUp;
+const mapDispatchToProps = (dispatch) => {
+    return ({
+        signUpWithGoogle: () => {
+            dispatch(googleSignUpStart());
+        },
+        signUpWithEmail: (displayName, email, password) => {
+            dispatch(emailSignUpStart({ displayName, email, password }));        // pass as object
+        }
+    });
+}
+
+export default connect(null, mapDispatchToProps)(SignUp);
