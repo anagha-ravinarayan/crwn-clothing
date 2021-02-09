@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import axios from 'axios';
 
 import StripeCheckout from "react-stripe-checkout";
 import { clearCartStart } from "../../redux/cart/cart.actions";
@@ -9,9 +10,20 @@ const StripeCheckoutButton = ({ price, clearCart }) => {
     const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;
 
     const onToken = (token) => {
-        // console.log(token);
-        alert("Payment Successful!");
-        clearCart();
+        axios({
+            url: "payment",
+            method: "post",
+            data: {
+                amount: priceForStripe,
+                token
+            }
+        }).then(response => {
+            alert("Payment Successful!");
+            clearCart();
+        }).catch(error => {
+            console.log("Payment error: " + error);
+            alert("There was an issue with your payment. Please use the provided credit card details.");
+        });
     }
 
     return (
