@@ -33,7 +33,7 @@ const CheckoutPage = ({ cartItems, cartTotal }) => {
                 )
             }
             <Total>
-                <span>TOTAL: ${cartTotal}</span>
+                <span>TOTAL: $ {cartTotal}</span>
             </Total>
             <PaymentWarning>
                 * Please use the following test Credit card details for payments *

@@ -17,7 +17,7 @@ const CheckoutItem = ({ cartItem, addItem, removeItem, clearItemFromCart }) => {
                 <Value>{quantity}</Value>
                 <Arrow onClick={() => addItem(cartItem)}>&#10095;</Arrow>
             </Quantity>
-            <Price>{price}</Price>
+            <Price>$ {price}</Price>
             <RemoveButton onClick={() => clearItemFromCart(cartItem)}>&#10005;</RemoveButton>
         </CheckoutItemContainer>
     );
