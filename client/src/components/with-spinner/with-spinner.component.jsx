@@ -1,23 +1,21 @@
 import React from "react";
 
-import { SpinnerOverlay, SpinnerContainer } from "./with-spinner.styles"
+import Spinner from "../spinner/spinner.component";
 
 // Higher Order Component which returns another component - Outer function has a component WrappedComponent as its only prop
 const WithSpinner = (WrappedComponent) => {
-    const Spinner = ({ isLoading, ...otherProps }) => {
+    const SpinnerComponent = ({ isLoading, ...otherProps }) => {
         return (
             isLoading ?
                 (
-                    <SpinnerOverlay>
-                        <SpinnerContainer />
-                    </SpinnerOverlay>
+                    <Spinner />
                 ) :
                 (
                     <WrappedComponent {...otherProps} />
                 )
         );
     }
-    return Spinner;
+    return SpinnerComponent;
 }
 
 export default WithSpinner;
