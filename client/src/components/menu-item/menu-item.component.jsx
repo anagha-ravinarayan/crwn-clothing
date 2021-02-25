@@ -3,8 +3,8 @@ import { withRouter } from "react-router-dom"; // Needed if navigation is requir
 
 import { MenuItemContainer, BackgroundImage, Content, Title, Subtitle } from "./menu-item.styles";
 
-const MenuItem = ({ title, imageUrl, size, linkUrl, history, location, match }) => (
-  <MenuItemContainer size={size} onClick={() => { history.push(`${match.url}${linkUrl}`) }}>
+const MenuItem = ({ title, imageUrl, size, history, location, match }) => (
+  <MenuItemContainer size={size} onClick={() => { history.push(`${match.url}shop/${title.toLowerCase()}`) }}>
     <BackgroundImage imageUrl={imageUrl} />
     <Content>
       <Title>{title.toUpperCase()}</Title>

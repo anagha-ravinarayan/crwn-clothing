@@ -64,7 +64,22 @@ export const addCollectionAndDocuments = async (collectionKey, documentsToAdd) =
     return await batch.commit();            // Executes the batch request
 }
 
-// Converts the collection snaphot array to object
+// Converts the directories collection snapshot to Array
+export const convertDirectorySnapshotToArray = (collection) => {
+    const transformedDirectory = collection.docs.map(doc => {
+        const id = doc.id;
+        const { title, imageUrl } = doc.data();
+
+        return {
+            id,
+            title,
+            imageUrl
+        }
+    });
+    return transformedDirectory;
+}
+
+// Converts the collection snapshot array to object
 export const convertCollectionSnapshotToMap = (collection) => {
     const transformedCollection = collection.docs.map(doc => {
         const id = doc.id;
@@ -78,7 +93,7 @@ export const convertCollectionSnapshotToMap = (collection) => {
         }
     });
 
-    // COnvert Collections array to object
+    // Convert Collections array to object
     return transformedCollection.reduce((accumulator, collection) => {
         accumulator[collection.title.toLowerCase()] = collection;
         return accumulator;

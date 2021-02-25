@@ -1,15 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { selectDirectorySections } from "../../redux/directory/directory.selectors";
 import MenuItem from "../menu-item/menu-item.component";
+
+import { selectDirectories } from "../../redux/directory/directory.selectors";
+
 import { DirectoryMenu } from "./directory.styles";
 
-const Directory = ({ sections }) => {
+const Directory = ({ directories }) => {
   return (
     <DirectoryMenu>
-      {sections.map(({ id, ...otherSectionProps }) => {   // Destructuring
-        return <MenuItem key={id} {...otherSectionProps} />
+      {directories.map(({ id, ...otherDirectoryProps }) => {   // Destructuring
+        return <MenuItem key={id} {...otherDirectoryProps} />
       })}
     </DirectoryMenu>
   );
@@ -17,7 +19,7 @@ const Directory = ({ sections }) => {
 
 const mapStateToProps = (state) => {
   return ({
-    sections: selectDirectorySections(state)
+    directories: selectDirectories(state)
   });
 }
 

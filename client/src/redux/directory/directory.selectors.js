@@ -2,7 +2,12 @@ import { createSelector } from "reselect";
 
 const selectDirectory = (state) => state.directory;
 
-export const selectDirectorySections = createSelector(
+export const selectDirectories = createSelector(
     [selectDirectory],
-    (directory) => directory.sections
+    (directory) => directory.directories
+);
+
+export const selectIsDirectoriesLoaded = createSelector(
+    [selectDirectory],
+    (directory) => !!directory.directories      // converts any value to boolean
 );
