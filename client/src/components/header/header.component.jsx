@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import { HeaderContainer, LogoContainer, OptionsContainer, Option } from "./header.styles";
 import { ReactComponent as Logo } from "../../assets/crown.svg";
@@ -10,7 +11,7 @@ import { signOutStart } from "../../redux/user/user.actions";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectCartHidden } from "../../redux/cart/cart.selectors";
 
-const Header = ({ currentUser, cartHidden, onSignOut }) => {
+const Header = ({ dispatch, currentUser, cartHidden, history }) => {
     return (
         <HeaderContainer>
             <LogoContainer to="/">
@@ -21,7 +22,10 @@ const Header = ({ currentUser, cartHidden, onSignOut }) => {
                 <Option to="/contact">CONTACT</Option>
                 {
                     currentUser
-                        ? <Option as='div' onClick={onSignOut}>SIGN OUT</Option>
+                        ? <Option as='div' onClick={() => {
+                            dispatch(signOutStart());
+                            history.push("/");
+                        }}>SIGN OUT</Option>
                         : <Option to="/signin">SIGN IN</Option>
                 }
                 <CartIcon />
@@ -41,12 +45,4 @@ const mapStateToProps = (state) => {
     });
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return ({
-        onSignOut: () => {
-            dispatch(signOutStart());
-        }
-    });
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default withRouter(connect(mapStateToProps)(Header));

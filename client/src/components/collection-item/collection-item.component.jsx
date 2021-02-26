@@ -1,15 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import { CollectionItemContainer, ImageContainer, CollectionFooter, Name, Price, StyledCustomButton } from "./collection-item.styles";
 
 import { addItem } from "../../redux/cart/cart.actions";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
 
-const CollectionItem = ({ item, addItem }) => {
+const CollectionItem = ({ item, addItem, currentUser, history }) => {
     const { name, price, imageUrl } = item;
 
     const onAddToCart = () => {
-        addItem(item);
+        currentUser
+            ? addItem(item)
+            : history.push("/signin");
     }
 
     return (
@@ -24,12 +28,17 @@ const CollectionItem = ({ item, addItem }) => {
     );
 }
 
+const mapStateToProps = (state) => {
+    return ({
+        currentUser: selectCurrentUser(state)
+    });
+}
 const mapDispatchToProps = (dispatch) => {
     return ({
         addItem: (item) => {
             dispatch(addItem(item));
         }
-    })
+    });
 }
 
-export default connect(null, mapDispatchToProps)(CollectionItem);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CollectionItem));

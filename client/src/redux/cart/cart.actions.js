@@ -44,3 +44,16 @@ export const clearCartFailure = () => {
         type: CartActionTypes.CLEAR_CART_FAILURE
     });
 }
+
+export const updateCartInFirebase = () => {
+    return ({
+        type: CartActionTypes.UPDATE_CART_IN_FIREBASE
+    });
+}
+
+export const pullCartFromFirebase = cartItems => {
+    return ({
+        type: CartActionTypes.PULL_CART_FROM_FIREBASE,
+        payload: cartItems
+    });
+}

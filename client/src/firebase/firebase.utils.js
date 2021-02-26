@@ -18,10 +18,12 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
+
 //--- Export Google Sign-in auth service provider
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
+
 
 //--- Export hook to create user entry in DB when signed in for the first time
 export const createUserProfileDocument = async (userAuth, additionalData) => {
@@ -51,6 +53,21 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef;
 }
 
+
+// Get ref of carts document for a specific user
+export const getUserCartRef = async (userId) => {
+    const cartsRef = firestore.collection('carts').where('userId', '==', userId);
+    const snapshot = await cartsRef.get();
+
+    if (snapshot.empty) {
+        const cartDocRef = firestore.collection('carts').doc();
+        await cartDocRef.set({ userId, cartItems: [] });
+        return cartDocRef;
+    }
+    return snapshot.docs[0].ref;
+}
+
+
 //--- Export hook to create shop data collection and its entries in DB 
 export const addCollectionAndDocuments = async (collectionKey, documentsToAdd) => {
     const collectionRef = firestore.collection(collectionKey);  // Create collection reference
@@ -63,6 +80,7 @@ export const addCollectionAndDocuments = async (collectionKey, documentsToAdd) =
 
     return await batch.commit();            // Executes the batch request
 }
+
 
 // Converts the directories collection snapshot to Array
 export const convertDirectorySnapshotToArray = (collection) => {
@@ -78,6 +96,7 @@ export const convertDirectorySnapshotToArray = (collection) => {
     });
     return transformedDirectory;
 }
+
 
 // Converts the collection snapshot array to object
 export const convertCollectionSnapshotToMap = (collection) => {
@@ -99,6 +118,7 @@ export const convertCollectionSnapshotToMap = (collection) => {
         return accumulator;
     }, {});
 }
+
 
 // Mimick the onAuthStateChanged functionality: get current user and immediately unsubscribe after getting the user 
 export const getCurrentUser = () => {

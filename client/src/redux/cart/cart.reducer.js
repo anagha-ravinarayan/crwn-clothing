@@ -38,6 +38,12 @@ const CartReducer = (state = INITIAL_STATE, action) => {
                 cartItems: []
             });
 
+        case CartActionTypes.PULL_CART_FROM_FIREBASE:
+            return ({
+                ...state,
+                cartItems: action.payload
+            });
+
         case CartActionTypes.CLEAR_CART_FAILURE:
         default:
             return state;
