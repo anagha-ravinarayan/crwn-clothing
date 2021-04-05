@@ -1,5 +1,5 @@
 # Crwn Clothing
-Responsive Progressive Web App called Crwn Clothing, an E-Commerce Application built using React 17.
+Responsive Progressive Web App called Crwn Clothing, an E-Commerce application built using **React 17**.
 
 Hosted on: **https://crwn-clothing-anagha.herokuapp.com/**
 
